@@ -1,18 +1,19 @@
 import discord
-from discord.ext import commands
-import os
 import asyncio
 
-intents = discord.Intents().default()
-intents.message_content = True
-intents.members = True
-bot = commands.Bot(command_prefix='...', intents=intents)
+from discord.ext import commands
+from os.path import splitext
+from os import listdir
 
+bot = commands.Bot(
+    command_prefix='...',
+    intents=discord.Intents().all(),
+    help_command=None # Disable default discord.py help command.
+)
 
 async def load_extensions():
-    for filename in os.listdir("./cogs"):
-        if filename.endswith(".py"):
-            await bot.load_extension(f"cogs.{filename[:-3]}")
+    for filename in listdir("./cogs"):
+        await bot.load_extension(f"cogs.{splitext(filename)[0]}")
 
 
 async def main():
